@@ -26,6 +26,5 @@ class InvalidUrlException extends AppExceptions {
 }
 
 class FetchDataException extends AppExceptions {
-  FetchDataException([String? message])
-      : super(message, 'Error while communicating with url');
+  FetchDataException([String? message]) : super(message, '');
 }

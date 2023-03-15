@@ -25,6 +25,24 @@ class NetworkApiService extends BaseApiService {
     return jsonResponse;
   }
 
+  @override
+  Future postApi(var data, String url) async {
+    dynamic jsonResponse;
+
+    try {
+      final response =
+          await http.post(Uri.parse(url), body: jsonEncode(data)).timeout(
+                const Duration(seconds: 10),
+              );
+      jsonResponse = returnResponse(response);
+    } on SocketException {
+      throw InternetException('');
+    } on TimeoutException {
+      throw TimeoutException('');
+    }
+    return jsonResponse;
+  }
+
   dynamic returnResponse(http.Response response) {
     switch (response.statusCode) {
       case 200:
@@ -32,6 +50,12 @@ class NetworkApiService extends BaseApiService {
         return jsonResponse;
       case 400:
         throw InvalidUrlException();
+      default:
+        throw FetchDataException(
+          // ignore: prefer_interpolation_to_compose_strings
+          'Error while communicating with server' +
+              response.statusCode.toString(),
+        );
     }
   }
 }
