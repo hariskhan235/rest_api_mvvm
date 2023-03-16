@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rest_api/res/components/round_button.dart';
 import 'package:rest_api/utils/utils.dart';
-import 'package:rest_api/view_model/services/controller/login_view_model.dart';
+
+import '../../view_model/services/controller/login/login/login_view_model.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -67,13 +68,6 @@ class _LoginViewState extends State<LoginView> {
                     Utils.snackBar(context, 'Password', 'Enter Password');
                   }
                 },
-                // onFieldSubmitted: (value) {
-                //   Utils.fieldFocusChange(
-                //     context,
-                //     loginController.emailFocusNode.value,
-                //     loginController.passwordFocusNode.value,
-                //   );
-                // },
                 decoration: const InputDecoration(
                     hintText: 'Enter Password',
                     hintStyle: TextStyle(),
@@ -82,11 +76,16 @@ class _LoginViewState extends State<LoginView> {
               SizedBox(
                 height: 20,
               ),
-              RoundButton(
-                  title: 'Login',
-                  onPress: () {
-                    if (_formKey.currentState!.validate()) {}
-                  })
+              Obx(() {
+                return RoundButton(
+                    title: 'Login',
+                    loading: loginController.loading.value,
+                    onPress: () {
+                      if (_formKey.currentState!.validate()) {
+                        loginController.loginApi(context);
+                      }
+                    });
+              })
             ],
           ),
         ),

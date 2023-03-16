@@ -30,11 +30,11 @@ class NetworkApiService extends BaseApiService {
     dynamic jsonResponse;
 
     try {
-      final response =
-          await http.post(Uri.parse(url), body: jsonEncode(data)).timeout(
-                const Duration(seconds: 10),
-              );
+      final response = await http.post(Uri.parse(url), body: data).timeout(
+            const Duration(seconds: 10),
+          );
       jsonResponse = returnResponse(response);
+      print(jsonResponse);
     } on SocketException {
       throw InternetException('');
     } on TimeoutException {
@@ -49,7 +49,8 @@ class NetworkApiService extends BaseApiService {
         dynamic jsonResponse = jsonDecode(response.body);
         return jsonResponse;
       case 400:
-        throw InvalidUrlException();
+        dynamic responseJson = jsonDecode(response.body);
+        return responseJson;
       default:
         throw FetchDataException(
           // ignore: prefer_interpolation_to_compose_strings
